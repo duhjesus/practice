@@ -6,8 +6,11 @@ import random
 import re
 import sys
 import difflib
+import time
+
 
 class TrieNode():
+    __slots__ = ('children','data', 'isCompleteWord', 'words')
     def __init__(self):
         self.children = {}
         self.data = []
@@ -29,15 +32,6 @@ class Solution():
                     # traverse to next tri node
                     curr = curr.children[char]
                     break
-                    #i = i + 1
-                    #if i <= len(contact)-1:
-                    #    char = contact[i]
-                    #else:
-                    #    i = i-1
-                    #    char = contact[i-1]
-                    #shouldnt run into problems here b/c a char string pattern
-                    #in the middle or end of word that is found within another word
-                    # will be on a whole other branch *uniqueness*
                 else:
                     #create mapping
                     charFound = False
@@ -45,13 +39,10 @@ class Solution():
                     curr.children[char] = newTrie
                     curr.data.append(char)
                     curr.words = curr.words +1
-                    #print("currchar=",char)
-                    #print("currdata=",curr.data)
-                    #print("isCompleteWord=",curr.isCompleteWord)
+
                     #traverse to next trie node
                     curr = curr.children[char]
         curr.isCompleteWord = True
-        #print("isCompleteWord=",curr.isCompleteWord)
         return
                     
     def find(self, partial):
@@ -70,27 +61,20 @@ class Solution():
             return curr.words +1
         return curr.words 
 def main():
-    
-    #n = int(input())
-    #
+    start_time = time.time()
     f =open("testcases.txt","r")
     f1 = f.readlines()
     n = int(f1[0])
-    print(n)
-    #
     sol = Solution()
     
-    #for n_itr in range(n):
     count = 0
     for n_itr in f1:
         count = count +1
         if n_itr ==f1[0]:
             continue
-        #opContact = input().split()
-        #
+
         opContact=n_itr.split()
-        #
-        print(opContact)
+
         op = opContact[0]
 
         contact = opContact[1]
@@ -107,16 +91,19 @@ def main():
                 f.write(str(sol.find(contactQ)))
                 print(sol.find(contactQ))                
     f.close
-    with open('result.txt','r') as hosts0:
-        with open("sol.txt",'r') as hosts1:
-            diff = difflib.unified_diff(
-                hosts0.readlines(),
-                hosts1.readlines(),
-                fromfile='hosts0',
-                tofile='hosts1',
-            )
-            for line in diff:
-                sys.stdout.write(line)       
+   # with open('result.txt','r') as hosts0:
+   #     with open("sol.txt",'r') as hosts1:
+   #         diff = difflib.unified_diff(
+   #             hosts0.readlines(),
+   #             hosts1.readlines(),
+   #             fromfile='hosts0',
+   #             tofile='hosts1',
+   #         )
+   #         for line in diff:
+   #             sys.stdout.write(line)
+    print("number of operations=",n)
+    print("@@@@@@ START TIME = ", start_time)
+    print("--- %s seconds ---" % (time.time()-start_time))
 
 if __name__ == '__main__':
     main()
