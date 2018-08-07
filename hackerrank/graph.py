@@ -1,5 +1,64 @@
+# dfs at the very bottom with adj list implementation
+# bfs below w/ adj matrix implementation
+class Graph():
+    def __init__(self, n):
+        self.n = n
+        self.nodelookup = {} # key=id,val=[boolean visited, distance from node v]
+        row = [0 for i in range(0,n)]
+        self.adjMatrix = [ row.copy() for j in range(0,n)]     
+    def connect(self, u, v):
+        self.adjMatrix[u][v] = 1
+        self.adjMatrix[v][u] = 1
 
+    def find_all_distances(self,s): #starting node
+        # for row in self.adjMatrix:
+        #     print(row)
+        for i in range(0,self.n):
+            self.nodelookup[i] = [False,-1]
+        queue = []
+        root = s
+        queue.append(s)
+        self.nodelookup[root][1] = 0
+        while len(queue) != 0:
+            v = queue.pop(0)
+            for  i in range(0,self.n): # neighbors of v
+                if i ==v:
+                    continue #skip
+                if self.adjMatrix[v][i] == 1:
+                    if self.nodelookup[i][0] == False:
+                        queue.append(i)
+                        self.nodelookup[i][0] = True
+                        self.nodelookup[i][1] = self.nodelookup[v][1]+6
+                        #adds the edge weight of grandparent ->parent to 
+                        # edge weight of parent->child (self.nodelookup[i][1])
+        for i in range(0,self.n):
+            if i ==root:
+                continue
+            if i == self.n-1:
+                print(self.nodelookup[i][1])
+            else:                
+                print(self.nodelookup[i][1], end=' ')
 
+            
+                        
+def main():
+    t = int(input())
+    for i in range(t):
+        n,m = [int(value) for value in input().split()]
+        graph = Graph(n)
+        for i in range(m):
+            x,y = [int(x) for x in input().split()]
+            #print(x,y)
+            graph.connect(x-1,y-1) 
+        s = int(input())
+        s = s-1
+        graph.find_all_distances(s)
+        #print("done with test")
+if __name__ == "__main__":
+    main()
+###############################
+# below  dfs and adj list
+#
 class Node():
     def __init__(self,id=None):
         self.id = id
